@@ -1,0 +1,151 @@
+.add-drug-page {
+  padding: 20px;
+}
+
+.add-drug-page .card-title {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group-with-btn {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.form-group-inline {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group-inline select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background-color: var(--white);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group-inline select:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.form-group-inline select.error {
+  border-color: #dc3545;
+}
+
+/* Supplier dropdown styling */
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background-color: var(--white);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 100%;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.form-group select.error {
+  border-color: #dc3545;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.form-select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background-color: var(--white);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.form-select.error {
+  border-color: #dc3545;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* .customButton{
+  background: none;
+  border: 1px solid var(--primary-blue);
+  color: var(--primary-blue);
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 14px;
+} */
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .form-group-with-btn {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-group-inline {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+}
