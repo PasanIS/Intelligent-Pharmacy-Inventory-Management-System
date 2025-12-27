@@ -54,18 +54,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                // Stateless session for JWT
+
+                // -----Stateless session for JWT
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Permit public access to login and signup endpoints
+
+                        // -----Permit public access to login and signup endpoints
                         .requestMatchers("/api/auth/**").permitAll()
-                        // All other requests require authentication
-                        .anyRequest().authenticated()
-                );
+
+                        // -----All other requests require authentication
+                        .anyRequest().authenticated())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         http.authenticationProvider(authenticationProvider());
 
-        // Add the JWT filter before the standard authentication filter
+        // -----Add the JWT filter before the standard authentication filter
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -77,8 +80,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
                 "http://localhost:5175",
-                "http://localhost:3000"
-        ));
+                "http://localhost:3000",
+                "http://192.168.1.2:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

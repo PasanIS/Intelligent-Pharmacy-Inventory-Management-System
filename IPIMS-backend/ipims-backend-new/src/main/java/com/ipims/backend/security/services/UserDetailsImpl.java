@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-// This class implements the core Spring Security interface
+
 public class UserDetailsImpl implements UserDetails {
 
     @Getter
@@ -33,7 +33,6 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    // Static factory method to build UserDetailsImpl from User entity
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = List.of();
 
@@ -44,8 +43,6 @@ public class UserDetailsImpl implements UserDetails {
                 user.getPassword(),
                 authorities);
     }
-
-    // --- Core UserDetails Interface Implementations ---
 
     @Override
     public String getUsername() {
@@ -82,7 +79,6 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
-    // Standard equals/hashCode based on ID
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

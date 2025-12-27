@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    // Used for the Dashboard's "Recent Transactions" section
     List<Transaction> findTop10ByOrderByTransactionDateDesc();
 }

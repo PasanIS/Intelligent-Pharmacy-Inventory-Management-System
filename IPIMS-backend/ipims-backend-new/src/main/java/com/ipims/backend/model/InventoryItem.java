@@ -23,7 +23,7 @@ public class InventoryItem {
     private String genericName;
 
     @Column(nullable = false)
-    private String dosage; // e.g., "500 mg"
+    private String dosage; // "500 mg"
 
     @Column(nullable = false)
     private Integer currentStock;
@@ -37,14 +37,13 @@ public class InventoryItem {
     private LocalDate expiryDate;
 
     @Column(nullable = false)
-    private String unit; // e.g., "tablets", "bottles"
+    private String unit; // "tablets", "bottles"
 
     @Column(nullable = false)
     private Double unitPrice; // Price per unit
 
 
     // --- Relationships ---
-
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;

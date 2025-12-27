@@ -1,10 +1,13 @@
 package com.ipims.backend.dto;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignupRequest {
 
     @NotBlank
@@ -17,6 +20,5 @@ public class SignupRequest {
     @NotBlank
     private String password;
 
-    // Note: ModelMapper will skip this field if it's not in the Entity,
     private String confirmPassword;
 }

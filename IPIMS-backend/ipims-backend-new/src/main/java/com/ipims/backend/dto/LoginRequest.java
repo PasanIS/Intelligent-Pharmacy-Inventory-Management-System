@@ -1,12 +1,14 @@
 package com.ipims.backend.dto;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.validation.constraints.NotBlank;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginRequest {
 
-    // The user logs in with their email
     @NotBlank
     private String email;
 

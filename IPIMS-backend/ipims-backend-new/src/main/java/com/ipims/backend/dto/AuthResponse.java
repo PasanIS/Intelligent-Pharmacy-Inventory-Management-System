@@ -1,8 +1,11 @@
 package com.ipims.backend.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthResponse {
 
     private String token;

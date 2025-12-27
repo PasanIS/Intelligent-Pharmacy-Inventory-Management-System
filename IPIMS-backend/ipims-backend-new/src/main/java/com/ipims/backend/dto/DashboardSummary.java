@@ -1,11 +1,15 @@
 package com.ipims.backend.dto;
 
-import lombok.Data;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DashboardSummary {
     private BigDecimal totalInventoryValue;
     private Long lowStockItemCount;

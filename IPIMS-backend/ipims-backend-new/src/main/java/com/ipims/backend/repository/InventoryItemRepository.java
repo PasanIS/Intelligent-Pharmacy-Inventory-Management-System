@@ -11,13 +11,13 @@ import java.util.Map;
 
 public interface InventoryItemRepository extends JpaRepository<InventoryItem, Long> {
 
-    // For Low Stock Alerts
+    // -----For Low Stock Alerts
     List<InventoryItem> findByCurrentStockLessThan(Integer threshold);
 
-    // For Expiring Soon Alerts (e.g., expiry within the next 'date')
+    // -----For Expiring Soon Alerts
     List<InventoryItem> findByExpiryDateBefore(LocalDate date);
 
-    // For Dashboard Stock Levels Chart (Aggregates stock by Category)
+    // -----For Dashboard Stock Levels Chart
     @Query("SELECT i.category.name as categoryName, SUM(i.currentStock) as currentStock " +
             "FROM InventoryItem i GROUP BY i.category.name")
     List<Map<String, Object>> findStockLevelsByCategory();

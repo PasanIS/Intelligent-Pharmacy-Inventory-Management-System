@@ -48,13 +48,13 @@ public class JwtUtils {
                     .parse(authToken);
             return true;
         } catch (MalformedJwtException e) {
-            // Log Malformed JWT exception
+            // -----Log Malformed JWT exception
         } catch (ExpiredJwtException e) {
-            // Log Expired JWT exception
+            // -----Log Expired JWT exception
         } catch (UnsupportedJwtException e) {
-            // Log Unsupported JWT exception
+            // -----Log Unsupported JWT exception
         } catch (IllegalArgumentException e) {
-            // Log JWT claims string is empty
+            // -----Log JWT claims string is empty
         }
         return false;
     }

@@ -29,7 +29,7 @@ public class ReportingService {
     public DashboardSummary getDashboardSummary() {
         DashboardSummary summary = new DashboardSummary();
 
-        // Total Inventory Value
+        // -----Total Inventory Value
         try {
             summary.setTotalInventoryValue(itemRepository.calculateTotalInventoryValue());
         } catch (Exception e) {
@@ -38,13 +38,13 @@ public class ReportingService {
         }
 
 
-        // Low Stock Items
+        // -----Low Stock Items
         long lowStockCount = itemRepository.findAll().stream()
                 .filter(i -> i.getCurrentStock() < (i.getMinStockThreshold() != null ? i.getMinStockThreshold() : 50))
                 .count();
         summary.setLowStockItemCount(lowStockCount);
 
-        // Expiring Soon (Within the next 90 days)
+        // -----Expiring Soon (Within the next 90 days)
         LocalDate expiringDate = LocalDate.now().plusDays(90);
         long expiringCount = itemRepository.findByExpiryDateBefore(expiringDate).size();
         summary.setExpiringSoonCount(expiringCount);
@@ -53,7 +53,7 @@ public class ReportingService {
 
         List<Transaction> recentTransactions = transactionRepository.findTop10ByOrderByTransactionDateDesc();
 
-        // Convert Transaction objects into the string format
+        // -----Convert Transaction objects into the string format
         List<String> transactionStrings = recentTransactions.stream()
                 .map(this::formatTransactionToString) // Use a helper method
                 .toList();

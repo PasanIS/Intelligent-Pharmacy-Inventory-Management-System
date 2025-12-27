@@ -7,7 +7,7 @@ import com.ipims.backend.repository.InventoryItemRepository;
 import com.ipims.backend.repository.SupplierRepository;
 import com.ipims.backend.repository.TransactionRepository;
 
-import org.modelmapper.ModelMapper;
+// import org.modelmapper.ModelMapper; (Removed)
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,15 +20,13 @@ public class InventoryService {
     private final CategoryRepository categoryRepository;
     private final SupplierRepository supplierRepository;
     private final TransactionRepository transactionRepository;
-    private final ModelMapper modelMapper;
 
     public InventoryService(InventoryItemRepository itemRepository, CategoryRepository categoryRepository,
-                            SupplierRepository supplierRepository, ModelMapper modelMapper,
-                            TransactionRepository transactionRepository) {
+            SupplierRepository supplierRepository,
+            TransactionRepository transactionRepository) {
         this.itemRepository = itemRepository;
         this.categoryRepository = categoryRepository;
         this.supplierRepository = supplierRepository;
-        this.modelMapper = modelMapper;
         this.transactionRepository = transactionRepository;
     }
 
@@ -49,7 +47,17 @@ public class InventoryService {
         Supplier supplier = supplierRepository.findById(request.getSupplierId())
                 .orElseThrow(() -> new RuntimeException("Supplier not found"));
 
-        InventoryItem item = modelMapper.map(request, InventoryItem.class);
+        InventoryItem item = new InventoryItem();
+        item.setBrandName(request.getBrandName());
+        item.setGenericName(request.getGenericName());
+        item.setDosage(request.getDosage());
+        item.setCurrentStock(request.getCurrentStock());
+        item.setMinStockThreshold(request.getMinStockThreshold());
+        item.setBatchNumber(request.getBatchNumber());
+        item.setExpiryDate(request.getExpiryDate());
+        item.setUnit(request.getUnit());
+        item.setUnitPrice(request.getUnitPrice());
+
         item.setCategory(category);
         item.setSupplier(supplier);
 
@@ -64,20 +72,31 @@ public class InventoryService {
         return savedItem;
     }
 
-    // UPDATE
+    // -----UPDATE
     @Transactional
     public InventoryItem updateItem(Long id, InventoryRequest request) {
         InventoryItem existingItem = itemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Item not found for update."));
 
-        modelMapper.map(request, existingItem);
+        // -----Manual mapping to avoid ModelMapper ambiguity with IDs
+        existingItem.setBrandName(request.getBrandName());
+        existingItem.setGenericName(request.getGenericName());
+        existingItem.setDosage(request.getDosage());
+        existingItem.setCurrentStock(request.getCurrentStock());
+        existingItem.setMinStockThreshold(request.getMinStockThreshold());
+        existingItem.setBatchNumber(request.getBatchNumber());
+        existingItem.setExpiryDate(request.getExpiryDate());
+        existingItem.setUnit(request.getUnit());
+        existingItem.setUnitPrice(request.getUnitPrice());
 
+        // -----Update Category
         if (request.getCategoryId() != null && !request.getCategoryId().equals(existingItem.getCategory().getId())) {
             Category category = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             existingItem.setCategory(category);
         }
 
+        // ------Update Supplier
         if (request.getSupplierId() != null && !request.getSupplierId().equals(existingItem.getSupplier().getId())) {
             Supplier supplier = supplierRepository.findById(request.getSupplierId())
                     .orElseThrow(() -> new RuntimeException("Supplier not found"));
@@ -87,7 +106,23 @@ public class InventoryService {
         return itemRepository.save(existingItem);
     }
 
-    // DELETE
+    @Transactional
+    public InventoryItem restockItem(Long id, Integer quantity) {
+        InventoryItem item = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+
+        item.setCurrentStock(item.getCurrentStock() + quantity);
+
+        Transaction transaction = new Transaction();
+        transaction.setItem(item);
+        transaction.setType(TransactionType.RECEIVE);
+        transaction.setQuantityChange(quantity);
+        transactionRepository.save(transaction);
+
+        return itemRepository.save(item);
+    }
+
+    // ------DELETE
     public void deleteItem(Long id) {
         if (!itemRepository.existsById(id)) {
             throw new RuntimeException("Item not found for deletion.");

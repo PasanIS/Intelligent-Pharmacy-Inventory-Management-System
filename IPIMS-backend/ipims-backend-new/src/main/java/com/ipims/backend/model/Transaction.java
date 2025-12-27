@@ -20,12 +20,11 @@ public class Transaction {
     @JoinColumn(name = "item_id", nullable = false)
     private InventoryItem item;
 
-    // Type of transaction (e.g., RECEIVE, DISPENSE, ADJUST)
+    // Type of transaction (RECEIVE, DISPENSE, ADJUST)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TransactionType type;
 
-    // The amount by which the stock changed (positive for RECEIVE/negative for DISPENSE)
     @Column(nullable = false)
     private Integer quantityChange;
 

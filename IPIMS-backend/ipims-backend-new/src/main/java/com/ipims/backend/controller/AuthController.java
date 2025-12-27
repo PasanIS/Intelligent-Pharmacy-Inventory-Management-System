@@ -8,6 +8,7 @@ import com.ipims.backend.security.jwt.JwtUtils;
 import com.ipims.backend.security.services.UserDetailsImpl;
 import com.ipims.backend.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,20 +16,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:5175")
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
-
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
     private final JwtUtils jwtUtils;
-
-    public AuthController(AuthenticationManager authenticationManager, AuthService authService, JwtUtils jwtUtils) {
-        this.authenticationManager = authenticationManager;
-        this.authService = authService;
-        this.jwtUtils = jwtUtils;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -46,18 +40,13 @@ public class AuthController {
                 jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
-                userDetails.getFullName()
-        ));
+                userDetails.getFullName()));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
-
-        try {
-            User newUser = authService.registerUser(signupRequest);
-            return ResponseEntity.ok("User registered successfully! ID: " + newUser.getId());
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        System.out.println( "signupRequest" + signupRequest.getEmail());
+        User newUser = authService.registerUser(signupRequest);
+        return ResponseEntity.ok("User registered successfully! ID: " + newUser.getId());
     }
 }

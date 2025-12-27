@@ -16,14 +16,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Matches the 'Email' from  UI
     @Column(unique = true, nullable = false)
     private String email;
 
-    // Matches the 'Full Name' from  UI
     private String fullName;
 
-    // Stores the BCrypt HASH, NOT the raw password
+    // -----Stores the BCrypt HASHed password
     @Column(nullable = false)
     private String password;
 }

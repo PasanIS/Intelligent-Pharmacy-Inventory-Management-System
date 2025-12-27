@@ -23,7 +23,4 @@ public class Supplier {
     private String email;
 
     private String phoneNumber;
-
-    // Relationship: One supplier can supply many Inventory items
-    // Add the mappedBy field in the InventoryItem
 }
