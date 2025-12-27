@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { login as apiLogin, signUp as apiRegister } from '../api/apiService';
 import { AuthContext, type User } from './AuthContextDefinition';
 
-// Define the AuthProvider component
+// ----------Define the AuthProvider component
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -13,20 +13,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    // Check for a token in local storage on app load
+    // ----------Check for a token in local storage on app load
     const token = localStorage.getItem('jwtToken');
+    const savedName = localStorage.getItem('userFullName');
     if (token) {
       setIsAuthenticated(true);
-      setUser({ fullName: 'Authenticated User', email: 'user@ipims.com' }); 
+      if (savedName) {
+        setUser({ fullName: savedName, email: '' });
+      }
     }
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      await apiLogin(email, password);
-      setIsAuthenticated(true);
-      setUser({ fullName: 'Pasan', email: email });
-      return true;
+      const success = await apiLogin(email, password);
+      if (success) {
+        setIsAuthenticated(true);
+        const fullName = localStorage.getItem('userFullName') || 'User';
+        setUser({ fullName: fullName, email: email });
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error("Login failed:", error);
       setIsAuthenticated(false);

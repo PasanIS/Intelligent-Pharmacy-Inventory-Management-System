@@ -1,7 +1,18 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import '../../src/styles/pages/login.css';
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card"
+import logoImage from '../assets/images/ipims_logo.png';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -10,61 +21,91 @@ const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => { // Mark as async
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    const success = await login(email, password); // Await the async login call
+    const success = await login(email, password);
 
     if (success) {
       navigate('/dashboard');
     } else {
-      setError('Invalid email or password.'); // Removed hardcoded suggestion
+      setError('Invalid email or password.');
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-box">
-        <div className="login-header">
-          <h1 className="main-logo">IPIMS</h1>
-          <p className="sub-text">Intelligent Pharmacy Management System</p>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Gradients */}
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/20 via-slate-950 to-slate-950 pointer-events-none" />
+      <div className="absolute -top-[20%] -right-[10%] w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-[20%] -left-[10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      <Card className="w-full max-w-md border-slate-800 bg-slate-900/50 backdrop-blur-xl shadow-2xl relative z-10">
+        <CardHeader className="space-y-4 text-center flex flex-col items-center">
+          <div className="w-32 h-32 mb-2 relative">
+            <img src={logoImage} alt="IPIMS Logo" className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(6,182,212,0.5)] rounded-lg" />
           </div>
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <div className="space-y-1">
+            <h2 className="text-3xl font-bold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">
+              Welcome Back
+            </h2>
+            <CardDescription className="text-slate-400 text-base">
+              Intelligent Pharmacy Management System
+            </CardDescription>
           </div>
-          {error && <div className="error-message">{error}</div>}
-          <div className="form-options">
-            <div className="remember-me">
-              <input type="checkbox" id="remember" />
-              <label htmlFor="remember">Remember me</label>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-slate-300">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-slate-950/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+              />
             </div>
-            <a href="#" className="forgot-password">Forgot your password?</a>
-          </div>
-          <button type="submit" className="login-btn">Log in</button>
-        </form>
-        <p className="signup-text">Don't have an account? <Link to="/signup">Sign up</Link></p>
-      </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-slate-300">Password</Label>
+                <a href="#" className="font-medium text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+                  Forgot password?
+                </a>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="bg-slate-950/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-cyan-500 focus:ring-cyan-500/20"
+              />
+            </div>
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-md text-center">
+                {error}
+              </div>
+            )}
+
+            <Button type="submit" className="w-full bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-bold py-5 shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] border-none">
+              Log in
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-center border-t border-slate-800/50 p-6">
+          <p className="text-sm text-slate-400">
+            Don't have an account?{" "}
+            <Link to="/signup" className="font-bold text-emerald-400 hover:text-emerald-300 transition-colors">
+              Sign up
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

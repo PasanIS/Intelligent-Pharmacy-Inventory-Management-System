@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   BarChart,
   Bar,
@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { getStockLevelData } from '../../api/apiService';
 
 interface StockLevelData {
   category: string;
@@ -18,29 +17,13 @@ interface StockLevelData {
   maxStock: number;
 }
 
-const StockLevelChart: React.FC = () => {
-  const [data, setData] = useState<StockLevelData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface StockLevelChartProps {
+  data: StockLevelData[];
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getStockLevelData();
-        setData(response.data);
-      } catch (err) {
-        setError('Failed to load stock level data');
-        console.error('Error fetching stock level data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+const StockLevelChart: React.FC<StockLevelChartProps> = ({ data }) => {
 
-    fetchData();
-  }, []);
-
-  // Custom tooltip to show stock levels
+  // ----------Custom tooltip to show stock levels
   const CustomTooltip = ({ active, payload, label }: {
     active?: boolean;
     payload?: Array<{ payload: StockLevelData }>;
@@ -49,21 +32,15 @@ const StockLevelChart: React.FC = () => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div style={{
-          backgroundColor: '#fff',
-          padding: '10px',
-          border: '1px solid #ccc',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>
-          <p style={{ margin: 0, fontWeight: 'bold' }}>{label}</p>
-          <p style={{ margin: '5px 0', color: '#8884d8' }}>
+        <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg shadow-lg">
+          <p className="font-bold text-slate-200 mb-2">{label}</p>
+          <p className="text-sm text-cyan-400">
             Current: {data.currentStock}
           </p>
-          <p style={{ margin: '5px 0', color: '#ff7c7c' }}>
+          <p className="text-sm text-red-400">
             Min: {data.minStock}
           </p>
-          <p style={{ margin: '5px 0', color: '#82ca9d' }}>
+          <p className="text-sm text-emerald-400">
             Max: {data.maxStock}
           </p>
         </div>
@@ -72,24 +49,10 @@ const StockLevelChart: React.FC = () => {
     return null;
   };
 
-  if (loading) {
-    return (
-      <div style={{ width: '100%', height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div>Loading stock level data...</div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div style={{ width: '100%', height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ color: 'red' }}>{error}</div>
-      </div>
-    );
-  }
 
   return (
-    <div style={{ width: '100%', height: '300px' }}>
+    <div className="w-full h-[300px]">
       <ResponsiveContainer>
         <BarChart
           data={data}
@@ -100,38 +63,40 @@ const StockLevelChart: React.FC = () => {
             bottom: 20,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
           <XAxis
             dataKey="category"
-            stroke="#666"
+            stroke="#94a3b8"
             fontSize={12}
             angle={-45}
             textAnchor="end"
             height={80}
+            tick={{ fill: '#94a3b8' }}
           />
           <YAxis
-            stroke="#666"
+            stroke="#94a3b8"
             fontSize={12}
+            tick={{ fill: '#94a3b8' }}
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend />
           <Bar
             dataKey="currentStock"
-            fill="#8884d8"
+            fill="#06b6d4" /* cyan-500 */
             name="Current Stock"
-            radius={[2, 2, 0, 0]}
+            radius={[4, 4, 0, 0]}
           />
           <Bar
             dataKey="minStock"
-            fill="#ff7c7c"
+            fill="#ef4444" /* red-500 */
             name="Minimum Stock"
-            radius={[2, 2, 0, 0]}
+            radius={[4, 4, 0, 0]}
           />
           <Bar
             dataKey="maxStock"
-            fill="#82ca9d"
+            fill="#10b981" /* emerald-500 */
             name="Maximum Stock"
-            radius={[2, 2, 0, 0]}
+            radius={[4, 4, 0, 0]}
           />
         </BarChart>
       </ResponsiveContainer>

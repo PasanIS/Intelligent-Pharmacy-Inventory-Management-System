@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   PieChart,
   Pie,
@@ -7,7 +7,6 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
-import { getCategoryBreakdownData } from '../../api/apiService';
 
 interface CategoryBreakdownData {
   name: string;
@@ -15,51 +14,21 @@ interface CategoryBreakdownData {
   color: string;
 }
 
-const CategoryBreakdownChart: React.FC = () => {
-  const [data, setData] = useState<CategoryBreakdownData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface CategoryBreakdownChartProps {
+  data: CategoryBreakdownData[];
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getCategoryBreakdownData();
-        setData(response.data);
-      } catch (err) {
-        setError('Failed to load category breakdown data');
-        console.error('Error fetching category breakdown data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ data }) => {
 
-    fetchData();
-  }, []);
-
-  // Format currency for tooltip
+  // ----------Format currency for tooltip
   const formatCurrency = (value: number) => {
     return `Rs. ${value.toLocaleString()}`;
   };
 
-  if (loading) {
-    return (
-      <div style={{ width: '100%', height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div>Loading category breakdown data...</div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div style={{ width: '100%', height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ color: 'red' }}>{error}</div>
-      </div>
-    );
-  }
 
   return (
-    <div style={{ width: '100%', height: '300px' }}>
+    <div className="w-full h-[300px]">
       <ResponsiveContainer>
         <PieChart>
           <Pie
@@ -73,26 +42,24 @@ const CategoryBreakdownChart: React.FC = () => {
             dataKey="value"
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell key={`cell-${index}`} fill={entry.color} stroke="#0f172a" strokeWidth={2} />
             ))}
           </Pie>
           <Tooltip
             formatter={(value: number) => [formatCurrency(value), 'Value']}
             contentStyle={{
-              backgroundColor: '#fff',
-              border: '1px solid #ccc',
+              backgroundColor: '#0f172a', /* slate-900 */
+              borderColor: '#1e293b', /* slate-800 */
+              color: '#f1f5f9', /* slate-100 */
               borderRadius: '8px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
             }}
+            itemStyle={{ color: '#f1f5f9' }}
           />
           <Legend
             verticalAlign="bottom"
             height={36}
-            formatter={(value, entry) => (
-              <span style={{ color: entry.color }}>
-                {value} - {formatCurrency(entry.payload?.value || 0)}
-              </span>
-            )}
+            formatter={(value) => <span className="text-slate-300 ml-2 text-xs">{value}</span>}
           />
         </PieChart>
       </ResponsiveContainer>

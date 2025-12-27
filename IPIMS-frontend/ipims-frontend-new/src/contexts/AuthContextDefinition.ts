@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-// Define the types for your authentication context
+// ----------Define the types for authentication context
 export interface User {
   fullName: string;
   email: string;
@@ -14,5 +14,5 @@ export interface AuthContextType {
   logout: () => void;
 }
 
-// Create the context
+// ----------Create the context
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

@@ -10,7 +10,7 @@ import type { AxiosError } from 'axios';
 interface ManageCategoriesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCategoryAdded: () => void; // Callback to refresh data in the parent component
+  onCategoryAdded: () => void; // -----Callback to refresh data in the parent component
 }
 
 const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ isOpen, onClose, onCategoryAdded }) => {
@@ -32,7 +32,6 @@ const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ isOpen, o
     } catch (error) {
         const axiosError = error as AxiosError;
         
-        // 💡 FIX: Check the HTTP status and provide a clear message
         if (axiosError.response?.status === 401 || axiosError.response?.status === 403) {
             setMessage('Session Expired or Unauthorized. Please log in again.');
         } else {
@@ -68,8 +67,8 @@ const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ isOpen, o
       setMessage(`Category '${categoryName}' added successfully!`);
       setMessageType('success');
       setCategoryName('');
-      onCategoryAdded(); // Call the parent's refresh function
-      fetchCategories(); // Refresh the list in the modal
+      onCategoryAdded(); // -----Call the parent's refresh function
+      fetchCategories(); // -----Refresh the list in the modal
     } catch (error) {
       const axiosError = error as AxiosError;
       if (axiosError.response?.status === 409) {
@@ -106,8 +105,8 @@ const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ isOpen, o
       setMessageType('success');
       setEditingId(null);
       setEditingName('');
-      onCategoryAdded(); // Call the parent's refresh function
-      fetchCategories(); // Refresh the list in the modal
+      onCategoryAdded(); // -----Call the parent's refresh function
+      fetchCategories(); // -----Refresh the list in the modal
     } catch (error) {
      const axiosError = error as AxiosError;
       if (axiosError.response?.status === 409) {
@@ -136,8 +135,8 @@ const ManageCategoriesModal: React.FC<ManageCategoriesModalProps> = ({ isOpen, o
       await deleteCategory(id);
       setMessage(`Category '${name}' deleted successfully!`);
       setMessageType('success');
-      onCategoryAdded(); // Call the parent's refresh function
-      fetchCategories(); // Refresh the list in the modal
+      onCategoryAdded(); // -----Call the parent's refresh function
+      fetchCategories(); // -----Refresh the list in the modal
     } catch (error) {
       setMessage('Failed to delete category.');
       setMessageType('error');

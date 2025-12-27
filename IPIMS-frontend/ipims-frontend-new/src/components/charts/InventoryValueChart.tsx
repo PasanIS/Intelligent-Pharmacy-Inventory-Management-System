@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   LineChart,
   Line,
@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { getInventoryValueData } from '../../api/apiService';
 
 interface InventoryValueData {
   date: string;
@@ -17,59 +16,29 @@ interface InventoryValueData {
   category: string;
 }
 
-const InventoryValueChart: React.FC = () => {
-  const [data, setData] = useState<InventoryValueData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface InventoryValueChartProps {
+  data: InventoryValueData[];
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getInventoryValueData();
-        setData(response.data);
-      } catch (err) {
-        setError('Failed to load inventory value data');
-        console.error('Error fetching inventory value data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+const InventoryValueChart: React.FC<InventoryValueChartProps> = ({ data }) => {
 
-    fetchData();
-  }, []);
-
-  // Format currency for tooltip
+  // ----------Format currency for tooltip
   const formatCurrency = (value: number) => {
     return `Rs. ${value.toLocaleString()}`;
   };
 
-  // Format month for x-axis
+  // ----------Format month for x-axis
   const formatMonth = (monthStr: string) => {
     const [year, month] = monthStr.split('-');
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return `${monthNames[parseInt(month) - 1]} ${year}`;
   };
 
-  if (loading) {
-    return (
-      <div style={{ width: '100%', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div>Loading inventory value data...</div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div style={{ width: '100%', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ color: 'red' }}>{error}</div>
-      </div>
-    );
-  }
 
   return (
-    <div style={{ width: '100%', height: '400px' }}>
+    <div className="w-full h-[400px]">
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -80,36 +49,41 @@ const InventoryValueChart: React.FC = () => {
             bottom: 20,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
           <XAxis
             dataKey="date"
             tickFormatter={formatMonth}
-            stroke="#666"
+            stroke="#94a3b8"
             fontSize={12}
+            tick={{ fill: '#94a3b8' }}
           />
           <YAxis
             tickFormatter={formatCurrency}
-            stroke="#666"
+            stroke="#94a3b8"
             fontSize={12}
+            tick={{ fill: '#94a3b8' }}
           />
           <Tooltip
             formatter={(value: number) => [formatCurrency(value), 'Inventory Value']}
             labelFormatter={formatMonth}
             contentStyle={{
-              backgroundColor: '#fff',
-              border: '1px solid #ccc',
+              backgroundColor: '#0f172a', /* slate-900 */
+              borderColor: '#1e293b', /* slate-800 */
+              color: '#f1f5f9', /* slate-100 */
               borderRadius: '8px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
             }}
+            itemStyle={{ color: '#f1f5f9' }}
+            labelStyle={{ color: '#cbd5e1' }}
           />
           <Legend />
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#8884d8"
+            stroke="#10b981" /* emerald-500 */
             strokeWidth={3}
-            dot={{ fill: '#8884d8', strokeWidth: 2, r: 4 }}
-            activeDot={{ r: 6, stroke: '#8884d8', strokeWidth: 2 }}
+            dot={{ fill: '#06b6d4', strokeWidth: 0, r: 4 }} /* cyan-500 */
+            activeDot={{ r: 6, stroke: '#10b981', strokeWidth: 2, fill: '#0f172a' }}
             name="Inventory Value"
           />
         </LineChart>

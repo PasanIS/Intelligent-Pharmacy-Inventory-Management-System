@@ -24,6 +24,8 @@ export interface InventoryItem {
   minStockThreshold?: number;
   categoryName?: string;
   supplierName?: string;
+  manufacturedDate?: string;
+  unit?: string;
 }
 
 export interface Supplier {
@@ -51,13 +53,13 @@ export interface Category {
 
 export interface Alert {
   type: 'Expiring Soon' | 'Low Stock';
-  // Fields for Expiring Soon items
+  // -----Fields for Expiring Soon items
   brandName?: string;
   batchNumber?: string;
   quantity?: number;
   expiryDate?: string;
   daysRemaining?: number;
-  // Fields for Low Stock/Reorder items
+  // -----Fields for Low Stock/Reorder items
   drugName?: string;
   suggestedQuantity?: number;
   reason?: string;
@@ -66,15 +68,51 @@ export interface Alert {
 }
 
 export interface ApiError {
-   message: string;
-   status?: number;
-   details?: Record<string, unknown>;
+  message: string;
+  status?: number;
+  details?: Record<string, unknown>;
 }
 
 export interface DashboardSummary {
-   totalInventoryValue: string; // Use string for BigDecimal from Java
-   lowStockItemCount: number;
-   expiringSoonCount: number;
-   stockLevelsByCategory: Array<{ categoryName: string; currentStock: number }>; // Matches backend query output
-   recentTransactions: string[]; // List of formatted transaction strings
+  totalInventoryValue: string;
+  lowStockItemCount: number;
+  expiringSoonCount: number;
+  stockLevelsByCategory: Array<{ categoryName: string; currentStock: number }>;
+  recentTransactions: string[];
+  // ------New fields for charts
+  categoryBreakdown: CategoryBreakdownData[];
+  inventoryValue: InventoryValueData[];
+  stockLevels: StockLevelData[];
+}
+
+export interface AuthResponse {
+  token: string;
+  type: string;
+  id: number;
+  email: string;
+  fullName: string;
+}
+
+export interface ApiResponse<T = unknown> {
+  data: T;
+  message?: string;
+}
+
+export interface CategoryBreakdownData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+export interface InventoryValueData {
+  date: string;
+  value: number;
+  category: string;
+}
+
+export interface StockLevelData {
+  category: string;
+  currentStock: number;
+  minStock: number;
+  maxStock: number;
 }

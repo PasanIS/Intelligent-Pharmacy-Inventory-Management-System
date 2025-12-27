@@ -6,20 +6,20 @@ import Card from "../components/common/Card";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 
-import type { InventoryItem, Category, Supplier, ApiError } from "../types"; 
-import "../styles/pages/add-drug.css";
+import type { InventoryItem, Category, Supplier, ApiError } from "../types";
 
-import { getAllCategories, getSuppliers, addInventoryItem } from "../api/apiService"; 
+
+import { getAllCategories, getSuppliers, addInventoryItem } from "../api/apiService";
 import { format } from "date-fns";
 
 
 interface FormDataType extends Partial<InventoryItem> {
 
-    categoryId: number | null; 
+    categoryId: number | null;
     supplierId: number | null;
-    categoryName?: string; 
+    categoryName?: string;
     supplierName?: string;
-    minStockThreshold?: number; 
+    minStockThreshold?: number;
 }
 
 const AddDrug: React.FC = () => {
@@ -34,7 +34,7 @@ const AddDrug: React.FC = () => {
         currentStock: 0,
         expiryDate: "",
         batchNumber: "",
-        unitPrice: 0, 
+        unitPrice: 0,
         minStockThreshold: 50,
     });
 
@@ -55,7 +55,7 @@ const AddDrug: React.FC = () => {
         }
     };
 
-  
+
     const fetchCategories = async () => {
         try {
             const response = await getAllCategories();
@@ -76,7 +76,7 @@ const AddDrug: React.FC = () => {
         setErrors((prev) => ({ ...prev, [field]: "" }));
     };
 
-    
+
     const validateForm = (): boolean => {
         let isValid = true;
         const newErrors: Partial<Record<keyof FormDataType, string>> = {};
@@ -112,8 +112,8 @@ const AddDrug: React.FC = () => {
             currentStock: formData.currentStock,
             expiryDate: formData.expiryDate ? format(new Date(formData.expiryDate), "yyyy-MM-dd") : "",
             batchNumber: formData.batchNumber,
-            unitPrice: formData.unitPrice, 
-            categoryId: formData.categoryId, 
+            unitPrice: formData.unitPrice,
+            categoryId: formData.categoryId,
             supplierId: formData.supplierId,
             minStockThreshold: formData.minStockThreshold,
         };
@@ -122,20 +122,20 @@ const AddDrug: React.FC = () => {
             await addInventoryItem(payload);
 
             setMessage("Drug added successfully! Redirecting...");
-            // Clear form data
+            // -----Clear form data
             setFormData({
                 brandName: "", genericName: "", dosage: "", categoryId: null, supplierId: null,
                 currentStock: 0, expiryDate: "", batchNumber: "", unitPrice: 0, minStockThreshold: 50,
             });
-            
-            setTimeout(() => navigate("/inventory"), 1500); 
+
+            setTimeout(() => navigate("/inventory"), 1500);
 
         } catch (error) {
             console.error("Failed to add drug:", error);
             const errorMessage =
                 error instanceof AxiosError && error.response?.data
                     ? (error.response.data as ApiError).message ||
-                        "Please check all fields and ensure supplier/category IDs are valid."
+                    "Please check all fields and ensure supplier/category IDs are valid."
                     : "Network error occurred or server did not respond correctly.";
             setMessage(`Failed to add drug: ${errorMessage}`);
         } finally {
@@ -149,14 +149,24 @@ const AddDrug: React.FC = () => {
 
     return (
         <MainLayout activePage="Inventory">
-            <div className="add-drug-page">
-                <Card title="Add New Drug">
-                    {message && <p className={`form-message ${message.includes("Failed") ? 'error' : 'success'}`}>{message}</p>}
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-grid">
+            <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
+                <div className="flex flex-col gap-2">
+                    <h2 className="text-3xl font-bold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">Add New Drug</h2>
+                    <p className="text-slate-400">Enter the details of the new drug/inventory item</p>
+                </div>
+
+                {message && (
+                    <div className={`p-4 rounded-lg border ${message.includes("Failed") ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'}`}>
+                        {message}
+                    </div>
+                )}
+
+                <Card className="p-6">
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {/* Brand Name Input */}
-                            <div className="form-group">
-                                <label htmlFor="brandName">Brand Name *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="brandName" className="text-sm font-medium text-slate-300">Brand Name *</label>
                                 <Input
                                     id="brandName"
                                     type="text"
@@ -170,8 +180,8 @@ const AddDrug: React.FC = () => {
                             </div>
 
                             {/* Generic Name Input */}
-                            <div className="form-group">
-                                <label htmlFor="genericName">Generic Name *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="genericName" className="text-sm font-medium text-slate-300">Generic Name *</label>
                                 <Input
                                     id="genericName"
                                     type="text"
@@ -185,8 +195,8 @@ const AddDrug: React.FC = () => {
                             </div>
 
                             {/* Dosage Input */}
-                            <div className="form-group">
-                                <label htmlFor="dosage">Dosage *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="dosage" className="text-sm font-medium text-slate-300">Dosage *</label>
                                 <Input
                                     id="dosage"
                                     type="text"
@@ -200,34 +210,34 @@ const AddDrug: React.FC = () => {
                             </div>
 
                             {/* CATEGORY Dropdown (Updated) */}
-                            <div className="form-group">
-                                <label htmlFor="categoryId">Category *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="categoryId" className="text-sm font-medium text-slate-300">Category *</label>
                                 <select
                                     id="categoryId"
-                                    value={formData.categoryId || ""} 
+                                    value={formData.categoryId || ""}
                                     onChange={(e) =>
-                                        handleInputChange("categoryId", parseInt(e.target.value) || null) 
+                                        handleInputChange("categoryId", parseInt(e.target.value) || null)
                                     }
-                                    className={errors.categoryId ? 'input-error' : ''}
+                                    className={`w-full px-4 py-3 rounded-lg border bg-slate-800/50 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200 ${errors.categoryId ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-700/50 focus:border-cyan-500 focus:ring-cyan-500/20 hover:border-slate-600'}`}
                                     required
                                 >
-                                    <option value="" disabled>Select a category</option>
+                                    <option value="" disabled className="bg-slate-900 text-slate-400">Select a category</option>
                                     {categories.length === 0 ? (
-                                        <option disabled>Loading...</option>
+                                        <option disabled className="bg-slate-900">Loading...</option>
                                     ) : (
                                         categories.map((cat) => (
-                                            <option key={cat.id} value={cat.id}> 
+                                            <option key={cat.id} value={cat.id} className="bg-slate-900 text-slate-100">
                                                 {cat.name}
                                             </option>
                                         ))
                                     )}
                                 </select>
-                                {errors.categoryId && (<span className="error-message">{errors.categoryId}</span>)}
+                                {errors.categoryId && (<span className="text-xs text-red-400 mt-1">{errors.categoryId}</span>)}
                             </div>
 
                             {/* Current Stock Input */}
-                            <div className="form-group">
-                                <label htmlFor="currentStock">Current Stock *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="currentStock" className="text-sm font-medium text-slate-300">Current Stock *</label>
                                 <Input
                                     id="currentStock"
                                     type="number"
@@ -241,8 +251,8 @@ const AddDrug: React.FC = () => {
                             </div>
 
                             {/* Unit Price Input */}
-                            <div className="form-group">
-                                <label htmlFor="unitPrice">Unit Price *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="unitPrice" className="text-sm font-medium text-slate-300">Unit Price *</label>
                                 <Input
                                     id="unitPrice"
                                     type="number"
@@ -257,8 +267,8 @@ const AddDrug: React.FC = () => {
                             </div>
 
                             {/* Expiry Date Input */}
-                            <div className="form-group">
-                                <label htmlFor="expiryDate">Expiry Date *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="expiryDate" className="text-sm font-medium text-slate-300">Expiry Date *</label>
                                 <Input
                                     id="expiryDate"
                                     type="date"
@@ -271,34 +281,34 @@ const AddDrug: React.FC = () => {
                             </div>
 
                             {/* SUPPLIER Dropdown */}
-                            <div className="form-group">
-                                <label htmlFor="supplierId">Supplier *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="supplierId" className="text-sm font-medium text-slate-300">Supplier *</label>
                                 <select
                                     id="supplierId"
                                     value={formData.supplierId || ""}
                                     onChange={(e) =>
                                         handleInputChange("supplierId", parseInt(e.target.value) || null)
                                     }
-                                    className={errors.supplierId ? 'input-error' : ''}
+                                    className={`w-full px-4 py-3 rounded-lg border bg-slate-800/50 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200 ${errors.supplierId ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-700/50 focus:border-cyan-500 focus:ring-cyan-500/20 hover:border-slate-600'}`}
                                     required
                                 >
-                                    <option value="" disabled>Select a supplier</option>
+                                    <option value="" disabled className="bg-slate-900 text-slate-400">Select a supplier</option>
                                     {suppliers.length === 0 ? (
-                                        <option disabled>Loading...</option>
+                                        <option disabled className="bg-slate-900">Loading...</option>
                                     ) : (
                                         suppliers.map((supplier) => (
-                                            <option key={supplier.id} value={supplier.id}>
-                                                {supplier.supplierName} 
+                                            <option key={supplier.id} value={supplier.id} className="bg-slate-900 text-slate-100">
+                                                {supplier.supplierName}
                                             </option>
                                         ))
                                     )}
                                 </select>
-                                {errors.supplierId && (<span className="error-message">{errors.supplierId}</span>)}
+                                {errors.supplierId && (<span className="text-xs text-red-400 mt-1">{errors.supplierId}</span>)}
                             </div>
 
                             {/* Batch Number Input */}
-                            <div className="form-group">
-                                <label htmlFor="batchNumber">Batch Number *</label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="batchNumber" className="text-sm font-medium text-slate-300">Batch Number *</label>
                                 <Input
                                     id="batchNumber"
                                     type="text"
@@ -310,7 +320,7 @@ const AddDrug: React.FC = () => {
                                     error={errors.batchNumber}
                                 />
                             </div>
-                           
+
                             <input
                                 type="hidden"
                                 value={formData.minStockThreshold || 50}
@@ -319,16 +329,17 @@ const AddDrug: React.FC = () => {
 
                         </div>
 
-                        <div className="form-actions">
+                        <div className="flex items-center justify-end gap-4 mt-4">
                             <Button
                                 type="button"
                                 variant="secondary"
                                 onClick={handleCancel}
                                 disabled={isSubmitting}
+                                className="bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700"
                             >
                                 Cancel
                             </Button>
-                            <Button type="submit" variant="primary" disabled={isSubmitting}>
+                            <Button type="submit" variant="primary" disabled={isSubmitting} className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white border-none shadow-lg shadow-cyan-500/20">
                                 {isSubmitting ? "Adding Drug..." : "Add Drug"}
                             </Button>
                         </div>

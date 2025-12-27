@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContextDefinition';
 
-// Re-export types for convenience
+// -----Re-export types for convenience
 export interface User {
   fullName: string;
   email: string;

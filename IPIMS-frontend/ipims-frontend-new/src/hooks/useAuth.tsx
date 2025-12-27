@@ -1,48 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { login as apiLogin, signUp as apiRegister } from '../api/apiService';
-
-// Define a type for the user data
-interface User {
-  fullName: string;
-  email: string;
-}
-
-// Define the shape of the authentication context
-interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  signup: (fullName: string, email: string, password: string, confirmPassword: string) => Promise<boolean>;
-  logout: () => void;
-}
-
-// Create the context
-const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
+import { AuthContext } from '../contexts/AuthContextDefinition';
+import type { User } from '../contexts/AuthContextDefinition';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    // Check for a token in local storage on app load
+    // ----------Check for a token in local storage on app load
     const token = localStorage.getItem('jwtToken');
+    const savedName = localStorage.getItem('userFullName');
+
     if (token) {
       setIsAuthenticated(true);
-      setUser({ fullName: 'Pasan', email: 'pasan@ipims.com' }); 
+      if (savedName) {
+        setUser({ fullName: savedName, email: '' });
+      }
     }
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      await apiLogin(email, password);
-      setIsAuthenticated(true);
-      setUser({ fullName: 'Pasan', email: email });
-      return true;
+      const success = await apiLogin(email, password);
+      if (success) {
+        setIsAuthenticated(true);
+        const fullName = localStorage.getItem('userFullName') || 'User';
+        console.log('[DEBUG] useAuth Login - Setting User:', fullName);
+        setUser({ fullName: fullName, email: email });
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error('Login failed:', error);
       setIsAuthenticated(false);
       setUser(null);
-      localStorage.removeItem('jwtToken'); // Clear any invalid token
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('userFullName');
       return false;
     }
   };
@@ -60,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem('userFullName');
     setIsAuthenticated(false);
     setUser(null);
   };

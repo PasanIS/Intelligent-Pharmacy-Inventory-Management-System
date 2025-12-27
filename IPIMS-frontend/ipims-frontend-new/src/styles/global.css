@@ -1,35 +1,94 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --primary-blue: #0a3d62;
-  --secondary-blue: #3498db;
-  --light-blue: #e8f4f8;
-  --text-color: #444;
-  --light-text: #888;
-  --background-color: #f7f7f7;
-  --white: #ffffff;
-  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --border-radius: 8px;
+@layer base {
+  :root {
+    --background: 222.2 47.4% 11.2%;
+    /* slate-900 like baseline */
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 47.4% 11.2%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 47.4% 11.2%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 160 84% 39%;
+    /* Emerald-500 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 189 94% 43%;
+    /* Cyan-500 */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 160 84% 39%;
+    /* Emerald ring */
+
+    --radius: 0.5rem;
+  }
+
+  /* Force dark mode styles by default */
+  .dark {
+    --background: 222.2 84% 4.9%;
+    /* Slate-950 */
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 160 84% 39%;
+    --primary-foreground: 222.2 47.4% 10%;
+
+    --secondary: 189 94% 43%;
+    --secondary-foreground: 222.2 47.4% 10%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 160 84% 39%;
+  }
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-slate-950 text-slate-50 font-sans antialiased overflow-y-scroll;
+    /* Add a subtle background gradient mesh if desired globally, or keep it per page */
+  }
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  line-height: 1.6;
-}
+@layer utilities {
+  .glass-card {
+    @apply bg-slate-900/50 backdrop-blur-md border border-slate-800 shadow-xl;
+  }
 
-a {
-  text-decoration: none;
-  color: var(--primary-blue);
-}
-
-input, button {
-  font-family: inherit;
+  .glass-header {
+    @apply bg-slate-950/80 backdrop-blur-md border-b border-slate-800 shadow-sm;
+  }
 }
